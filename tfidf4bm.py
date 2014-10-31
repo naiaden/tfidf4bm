@@ -1,6 +1,7 @@
 from ReadFile import FileReader
+input_file = "bla.tsv"
+content_column = 5
 
-#reader = FileReader(stop_words="stopwords.txt")
-reader = FileReader()
-reader.learn_frequencies("input.txt", column=3)
-reader.compute_tfidf("input.txt", column=3)
+reader = FileReader(delimiter='\t', stop_words="stopwords.txt")
+reader.learn_frequencies(input_file, column=content_column)
+reader.compute_tfidf(input_file, column=content_column, sparse=True, limit=25)
