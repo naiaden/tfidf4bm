@@ -4,6 +4,8 @@ import math
 import csv
 import operator
 
+from nltk.tokenize import WordPunctTokenizer
+
 class FileReader:
     stop_words = []
     compound_words = []
@@ -12,7 +14,7 @@ class FileReader:
     document_frequencies = []
     document_frequency = {}
 
-    def __init__(self, stop_words=None, compound_words=None, delimiter=','):
+    def __init__(self, year_documents=False, stop_words=None, compound_words=None, delimiter=','):
         self.delimiter = delimiter
         if stop_words is not None:
             with open(stop_words, 'r') as f:
@@ -33,7 +35,7 @@ class FileReader:
             for doc_nr, row in enumerate(reader):
                 word_count = {}
 
-                text = row[column].split()
+                text = WordPunctTokenizer().tokenize(row[column].lower())
                 for word in text:
                     if word not in self.stop_words:
                         if word not in word_count:
@@ -50,7 +52,7 @@ class FileReader:
                 self.document_frequencies.append(word_count)
         print(len(self.document_frequency))
                 
-    def compute_tfidf(self, file, column=None, sparse=False, limit=None):
+    def compute_tfidf(self, column=None, sparse=False, limit=None):
         words_idx = []
         for k in self.document_frequency.keys():
             words_idx.append(k) 
@@ -82,7 +84,7 @@ class FileReader:
                 if limit is None:
                     print(zip(sorted(doc_tf_idfs,reverse=True),sorted_tf_idf_words))
                 else:
-                    print(str(doc_nr) + str(zip(sorted(doc_tf_idfs,reverse=True),sorted_tf_idf_words)[0:limit]))
+                    print(str(doc_nr+1) + str(zip(sorted(doc_tf_idfs,reverse=True),sorted_tf_idf_words)[0:limit]))
             else:
                 print(doc_tf_idfs)
         print("PROCESSED: " + str(doc_nr+1) + " documents", file=sys.stderr)
