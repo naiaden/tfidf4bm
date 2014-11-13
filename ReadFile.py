@@ -88,19 +88,15 @@ class FileReader:
                 idf = math.log(N / len(v))
                 doc_tf_idfs.append(tf*idf)
             if sparse:
-                #pass
                 sorted_tf_idfs_pos = [i[0] for i in sorted(enumerate(doc_tf_idfs), key=lambda x:x[1], reverse=True)]
                 sorted_tf_idf_words = []
                 for idx in sorted_tf_idfs_pos:
                     sorted_tf_idf_words.append(words_idx[idx])
-                #print(sorted_tf_idf_words)
-                #print(doc_tf_idfs)
 
                 if limit is None:
                     limit = len(self.document_frequency)
                 
                 tfidf_word_tuples = (zip(sorted(doc_tf_idfs,reverse=True),sorted_tf_idf_words)[0:limit])
-                #print('|'.join(map(str,tfidf_word_tuples)))
                 output_string = ""
                 for (t1,t2) in tfidf_word_tuples:
                     output_string += str(t1) + "\t" + str(t2) + "\t"
